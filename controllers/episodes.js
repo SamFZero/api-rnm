@@ -1,5 +1,18 @@
 import EpisodeReview from '../models/EpisodeReview';
 
+export const getAllEpisodes = async (req, res, next) => {
+    try {
+        const episodes = await EpisodeReview.find();
+        res.status(200).json({
+            success: true,
+            count: episodes.length,
+            data: episodes,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
 export const createReview = async (req, res, next) => {
     try {
         const { episodeId, rating, review } = req.body;

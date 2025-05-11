@@ -1,6 +1,7 @@
 // src/routes/episodeRoutes.js
 import { Router } from 'express';
 import {
+    getAllEpisodes,
     createReview,
     getReviewsByEpisode,
     updateReview,
@@ -8,6 +9,8 @@ import {
 } from '../controllers/episodeReviewController';
 
 const router = Router();
+
+router.get('/', getAllEpisodes);
 
 router.post('/reviews', createReview);
 
