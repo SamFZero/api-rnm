@@ -1,4 +1,4 @@
-import EpisodeReview from '../models/EpisodeReview.js';
+import EpisodeReview from '../models/episodes.js';
 
 export const getFavoriteEpisodes = async (req, res, next) => {
     try {

@@ -4,7 +4,7 @@ import {
     addFavoriteEpisode,
     removeFavoriteEpisode,
     updateEpisodeReview
-} from '../controllers/episodeController.js';
+} from '../controllers/episodes.js';
 
 const router = Router();
 

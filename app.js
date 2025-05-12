@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import qrRoutes from './routes/qr.js';
-import episodeRoutes from './routes/episodeRoutes.js';
+import episodeRoutes from './routes/episodes.js';
 import 'dotenv/config';
 const app = express()
 
