@@ -1,97 +1,91 @@
-import EpisodeReview from '../models/EpisodeReview';
+import EpisodeReview from '../models/EpisodeReview.js';
 
-export const getAllEpisodes = async (req, res, next) => {
+export const getFavoriteEpisodes = async (req, res, next) => {
     try {
-        const episodes = await EpisodeReview.find();
+        const episodes = await EpisodeReview.find({ isFavorite: true })
+            .sort({ createdAt: -1 });
+
         res.status(200).json({
             success: true,
             count: episodes.length,
-            data: episodes,
+            data: episodes
         });
     } catch (err) {
         next(err);
     }
 };
 
-export const createReview = async (req, res, next) => {
+export const addFavoriteEpisode = async (req, res, next) => {
     try {
-        const { episodeId, rating, review } = req.body;
+        const episodeData = req.body;
 
-        const newReview = new EpisodeReview({
-            episodeId,
-            rating,
-            review
-        });
-
-        const savedReview = await newReview.save();
-
-        res.status(201).json({
-            success: true,
-            data: savedReview
-        });
-    } catch (err) {
-        next(err);
-    }
-};
-
-export const getReviewsByEpisode = async (req, res, next) => {
-    try {
-        const { episodeId } = req.params;
-        const reviews = await EpisodeReview.find({ episodeId }).sort({ createdAt: -1 });
-
-        res.status(200).json({
-            success: true,
-            count: reviews.length,
-            data: reviews
-        });
-    } catch (err) {
-        next(err);
-    }
-};
-
-export const updateReview = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const { rating, review } = req.body;
-
-        const updatedReview = await EpisodeReview.findByIdAndUpdate(
-            id,
-            { rating, review },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedReview) {
-            return res.status(404).json({
+        const existingEpisode = await EpisodeReview.findOne({ id: episodeData.id });
+        if (existingEpisode) {
+            return res.status(400).json({
                 success: false,
-                message: 'Review not found'
+                message: 'Episode already exists in favorites'
             });
         }
 
-        res.status(200).json({
+        const newFavorite = new EpisodeReview({
+            ...episodeData,
+            isFavorite: true
+        });
+
+        const savedEpisode = await newFavorite.save();
+
+        res.status(201).json({
             success: true,
-            data: updatedReview
+            data: savedEpisode
         });
     } catch (err) {
         next(err);
     }
 };
 
-export const deleteReview = async (req, res, next) => {
+export const removeFavoriteEpisode = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const deletedReview = await EpisodeReview.findByIdAndDelete(id);
+        const deletedEpisode = await EpisodeReview.findOneAndDelete({ id: Number(id) });
 
-        if (!deletedReview) {
+        if (!deletedEpisode) {
             return res.status(404).json({
                 success: false,
-                message: 'Review not found'
+                message: 'Episode not found in favorites'
             });
         }
 
         res.status(200).json({
             success: true,
             data: {}
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const updateEpisodeReview = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { rating, review } = req.body;
+
+        const updatedEpisode = await EpisodeReview.findOneAndUpdate(
+            { id: Number(id) },
+            { rating, review },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedEpisode) {
+            return res.status(404).json({
+                success: false,
+                message: 'Episode not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: updatedEpisode
         });
     } catch (err) {
         next(err);

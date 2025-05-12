@@ -1,23 +1,19 @@
-// src/routes/episodeRoutes.js
 import { Router } from 'express';
 import {
-    getAllEpisodes,
-    createReview,
-    getReviewsByEpisode,
-    updateReview,
-    deleteReview
-} from '../controllers/episodeReviewController';
+    getFavoriteEpisodes,
+    addFavoriteEpisode,
+    removeFavoriteEpisode,
+    updateEpisodeReview
+} from '../controllers/episodeController.js';
 
 const router = Router();
 
-router.get('/', getAllEpisodes);
+router.get('/', getFavoriteEpisodes);
 
-router.post('/reviews', createReview);
+router.post('/', addFavoriteEpisode);
 
-router.get('/:episodeId/reviews', getReviewsByEpisode);
+router.delete('/:id', removeFavoriteEpisode);
 
-router.put('/reviews/:id', updateReview);
-
-router.delete('/reviews/:id', deleteReview);
+router.put('/:id/review', updateEpisodeReview);
 
 export default router;
