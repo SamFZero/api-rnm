@@ -14,6 +14,6 @@ router.post('/', addFavoriteEpisode);
 
 router.delete('/:id', removeFavoriteEpisode);
 
-router.put('/:id/review', updateEpisodeReview);
+router.put('/:id', updateEpisodeReview);
 
 export default router;
